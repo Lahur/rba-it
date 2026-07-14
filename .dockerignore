@@ -1,0 +1,10 @@
+.git
+.gradle
+.idea
+build
+data
+rba-it-react
+*.md
+*.yaml
+*.yml
+*.docx
