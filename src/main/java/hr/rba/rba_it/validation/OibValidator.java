@@ -12,11 +12,10 @@ public class OibValidator implements ConstraintValidator<ValidOib, String> {
         if (oib == null) {
             return false;
         }
-        String digits = oib.startsWith("HR") ? oib.substring(2) : oib;
-        if (!digits.matches("\\d{" + OIB_LENGTH + "}")) {
+        if (!oib.matches("\\d{" + OIB_LENGTH + "}")) {
             return false;
         }
-        return hasValidCheckDigit(digits);
+        return hasValidCheckDigit(oib);
     }
 
     private boolean hasValidCheckDigit(String oib) {

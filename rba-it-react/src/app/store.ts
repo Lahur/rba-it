@@ -22,6 +22,8 @@ httpClient.interceptors.response.use(
             } else {
                 store.dispatch(showToast(error.response?.data?.message ?? 'Bad request'))
             }
+        } else if (error.response?.status === 409) {
+            store.dispatch(showToast(error.response?.data ?? 'Conflict'))
         } else {
             store.dispatch(showToast('Something went wrong. Please try again later.'))
         }

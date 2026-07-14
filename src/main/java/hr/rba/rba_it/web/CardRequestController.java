@@ -57,6 +57,7 @@ public class CardRequestController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Card request created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid request body"),
+            @ApiResponse(responseCode = "409", description = "Card request with this OIB already exists"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<CardRequestResponse> save(@RequestBody @Validated CardRequestRequest request) {

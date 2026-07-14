@@ -4,6 +4,7 @@ import hr.rba.rba_it.dao.CardRequestRepository;
 import hr.rba.rba_it.dto.CardRequestRequest;
 import hr.rba.rba_it.dto.CardRequestResponse;
 import hr.rba.rba_it.enumeration.CardStatus;
+import hr.rba.rba_it.exception.DuplicateOibException;
 import hr.rba.rba_it.exception.NotFoundException;
 import hr.rba.rba_it.mapper.CardRequestMapper;
 import hr.rba.rba_it.model.CardRequestEntity;
@@ -95,6 +96,23 @@ class CardRequestServiceTest {
         CardRequestResponse result = service.save(request);
 
         assertThat(result).isEqualTo(response);
+    }
+
+    @Test
+    void save_whenOibAlreadyExists_throwsDuplicateOibExceptionAndDoesNotSave() {
+        CardRequestRequest request = CardRequestRequest.builder()
+                .firstName("Ana")
+                .lastName("Anic")
+                .oib(OIB)
+                .status(CardStatus.PENDING)
+                .build();
+        when(repository.findByOib(OIB)).thenReturn(Optional.of(entity()));
+
+        assertThatThrownBy(() -> service.save(request))
+                .isInstanceOf(DuplicateOibException.class)
+                .hasMessage("Card request with oib %s already exists".formatted(OIB));
+
+        verify(repository, never()).save(any());
     }
 
     @Test

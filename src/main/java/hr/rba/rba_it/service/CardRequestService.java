@@ -4,6 +4,7 @@ import hr.rba.rba_it.dao.CardRequestRepository;
 import hr.rba.rba_it.dto.CardRequestRequest;
 import hr.rba.rba_it.dto.CardRequestResponse;
 import hr.rba.rba_it.enumeration.CardStatus;
+import hr.rba.rba_it.exception.DuplicateOibException;
 import hr.rba.rba_it.exception.NotFoundException;
 import hr.rba.rba_it.mapper.CardRequestMapper;
 import hr.rba.rba_it.model.CardRequestEntity;
@@ -40,6 +41,9 @@ public class CardRequestService {
     public CardRequestResponse save(CardRequestRequest request) {
         log.debug("Saving new card request");
         log.trace("CardRequest body: {}", request);
+        if (repository.findByOib(request.oib()).isPresent()) {
+            throw new DuplicateOibException("Card request with oib %s already exists".formatted(request.oib()));
+        }
         return cardRequestMapper.toResponse(repository.save(cardRequestMapper.toEntity(request)));
     }
 
